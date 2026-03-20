@@ -3,7 +3,7 @@ from playwright.sync_api import sync_playwright
 import time
 def test_calendars():
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False) # Đặt headless=True để chạy ngầm, hoặc False để xem trình duyệt
+        browser = p.chromium.launch(headless=True) # Đặt headless=True để chạy ngầm, hoặc False để xem trình duyệt
         page = browser.new_page()
         calendars = Calendars(page)
         calendars.navigate()
