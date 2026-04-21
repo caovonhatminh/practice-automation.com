@@ -27,6 +27,28 @@ jobs:
       - name: Run test cicd
         run: pytest tests/testCalendars.py --html=report.html --self-contained-html
 
+      - name: Send email notification on success
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USERNAME }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "[practice-automation.com] Tests passed"
+          to: caovonhatminh09091999@gmail.com
+          from: ${{ secrets.NOTIFY_EMAIL_FROM }}
+          secure: ${{ secrets.SMTP_SECURE }}
+          body: |
+            GitHub Actions test job passed successfully.
+
+            Repository: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Commit: ${{ github.sha }}
+            Actor: ${{ github.actor }}
+            Workflow: ${{ github.workflow }}
+            Run URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
       # - name: Upload report
       #   if: always()
       #   uses: actions/upload-artifact@v4
